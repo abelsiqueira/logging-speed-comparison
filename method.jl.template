@@ -26,6 +26,7 @@ function %%METHODNAME%%(
   solved = √slope < ϵ
   tired = neval_grad(nlp) > max_eval || Δt > max_time
 
+  %%INITIAL%%
   %%LOG%%
 
   while !(solved || tired)

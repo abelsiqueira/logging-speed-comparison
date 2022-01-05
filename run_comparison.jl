@@ -16,6 +16,7 @@ for (key, strat) in strategies
         template,
         "%%PKGS%%" => strat[:pkgs],
         "%%METHODNAME%%" => mtd,
+        "%%INITIAL%%" => strat[:initial],
         "%%LOG%%" => strat[:log],
       ),
     )
@@ -30,7 +31,7 @@ try
     reset!(nlp)
     @info "Testing $mtd"
     foo = eval(Symbol(mtd))
-    iter, x, fx, status, Δt = foo(nlp; verbose = v)
+    iter, x, fx, status, Δt = foo(nlp; verbose = v, max_eval = 10)
     @info "iter = $iter, fx = $fx, status = $status, Δt = $Δt"
   end
 catch ex
@@ -40,13 +41,14 @@ finally
   finalize(nlp)
 end
 
+
 # Problem selection
 problems = ["CUBE", "ROSENBR", "HILBERTB", "ARGLINC", "BROWNAL", "GENROSE", "PENALTY1", "SBRYBND"]
 
 # Run and collect
-tries = 2
+tries = 50
 data = DataFrame(
-  "mtd" => String[],
+  "method" => String[],
   "problem" => String[],
   "verbose" => Bool[],
   ["col$i" => Float64[] for i = 1:tries]...,
